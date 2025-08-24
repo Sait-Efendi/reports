@@ -6,93 +6,87 @@
 <title>Участия в роликах — отчёты</title>
 <style>
   :root{
-    --bg:#f6f7fb; --panel:#fff; --text:#0f172a; --muted:#64748b; --line:#e6e9f0;
-    --accent:#A11D33; --gold:#D3AE58; --danger:#dc2626;
-    --radius:20px; --shadow:0 10px 34px rgba(2,8,23,.06), 0 2px 10px rgba(2,8,23,.04);
+    --bg:#f6f7fb; --panel:#ffffff; --text:#0f172a; --muted:#64748b; --line:#e6e9f0;
+    --accent:#A11D33; --accent-dark:#7d0f22; --gold:#D3AE58; --danger:#dc2626;
+    --radius:18px; --shadow:0 10px 34px rgba(2,8,23,.06), 0 2px 10px rgba(2,8,23,.04);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
   html,body{height:100%}
   body{
-    margin:0; color:var(--text);
-    background:
-      radial-gradient(1100px 380px at 50% -10%, rgba(211,174,88,.12), transparent 60%),
-
+    margin:0; color:var(--text); background:#f6f7fb;
     font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;
   }
 
-  .wrap{max-width:520px; margin:0 auto; padding:16px}
-  .card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px 16px; animation:slideUp .3s ease}
-  @keyframes slideUp{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .wrap{max-width:520px; margin:0 auto; padding:14px}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:22px; box-shadow:var(--shadow); padding:18px 16px}
 
-  /* — Хедер — */
-  .crest{
-    width:120px; height:120px; object-fit:contain; display:block; margin:6px auto 8px;
-  }
-  h1{margin:6px 0 2px; text-align:center; font-size:22px; font-weight:800}
-  .sub{display:flex; justify-content:center; gap:12px; color:var(--muted); font-size:13px; margin-bottom:2px}
-  .chip{background:rgba(211,174,88,.18); color:#8a6d28; border:1px solid rgba(211,174,88,.5); padding:4px 10px; border-radius:999px; font-weight:700; font-size:12px}
+  /* Шапка */
+  .crest{width:200px;height:200px;object-fit:contain;display:block;margin:4px auto 2px}
+  .brand{font-size:44px;font-weight:900;letter-spacing:.3px;color:var(--accent);text-align:center;line-height:1;margin:0 0 6px}
+  h1{margin:6px 0 12px;text-align:center;font-size:20px;font-weight:800;color:#12213a}
 
-  /* — Формы — */
-  label{display:block; font-size:13px; color:var(--muted); margin:12px 0 6px}
+  /* Поля */
+  label{display:block;font-size:12px;color:#8a97ad;margin:12px 0 6px}
   .field{
-    width:100%; padding:12px 14px; border-radius:14px; border:1px solid var(--line); background:#fff; color:var(--text); font-size:16px;
+    width:100%; padding:12px 14px; border-radius:14px; border:1px solid var(--line);
+    background:#fff; color:var(--text); font-size:16px; -webkit-appearance:none; appearance:none;
     transition:border-color .18s ease, box-shadow .18s ease;
-    -webkit-appearance:none; appearance:none; /* важно для iOS */
   }
-  .field:focus{border-color:var(--gold); box-shadow:0 0 0 6px rgba(211,174,88,.16); outline:none}
-  textarea.field{min-height:100px; resize:vertical}
-  .muted{color:var(--muted); font-size:13px}
+  .field:focus{border-color:#cfd6e3; box-shadow:0 0 0 4px rgba(207,214,227,.4); outline:none}
+  textarea.field{min-height:110px; resize:vertical}
 
-  /* ==== FIX: iOS Safari для input[type=date] ==== */
+  /* Дата */
   input[type="date"].field{
-    padding-right:38px; /* место под нашу иконку */
-    background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%2364748b' stroke-width='2' viewBox='0 0 24 24'><rect width='18' height='18' x='3' y='4' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg>") no-repeat right 10px center;
+    padding-right:40px;
+    background:#fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='none' stroke='%2364748b' stroke-width='2' viewBox='0 0 24 24'><rect width='18' height='18' x='3' y='4' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg>") no-repeat right 12px center;
     background-size:20px 20px;
   }
-  /* спрятать нативный индикатор календаря вебкита */
-  input[type="date"].field::-webkit-calendar-picker-indicator{
-    opacity:0; display:none; pointer-events:none;
-  }
-  /* выровнять внутренний текст/высоту в iOS */
-  input[type="date"].field::-webkit-date-and-time-value{
-    text-align:left; height:auto;
-  }
+  input[type="date"].field::-webkit-calendar-picker-indicator{opacity:0;display:none}
+  input[type="date"].field::-webkit-date-and-time-value{height:auto;text-align:left}
 
-  /* — Компактный список сотрудников — */
-  .box{border:1px solid var(--line); border-radius:16px; background:#fff; overflow:hidden}
-  .box-head{padding:8px}
+  /* Поиск — отдельный блок */
+  .searchCard{
+    background:#fff; border:1px solid var(--line); border-radius:16px;
+    padding:10px; margin-top:8px; margin-bottom:8px;
+  }
   .search{width:100%; border:1px solid var(--line); background:#fff; border-radius:12px; padding:10px 12px; font-size:16px}
-  .search:focus{border-color:var(--gold); outline:none; box-shadow:0 0 0 6px rgba(211,174,88,.12)}
+  .search:focus{border-color:#cfd6e3; outline:none; box-shadow:0 0 0 4px rgba(207,214,227,.35)}
+
+  /* Список сотрудников */
+  .box{border:1px solid var(--line); border-radius:16px; background:#fff; overflow:hidden}
   .list{max-height:56vh; overflow:auto}
   .row{
-    display:grid; grid-template-columns:auto 1fr; gap:8px; align-items:flex-start;
-    padding:8px 12px; border-top:1px solid var(--line);
+    display:grid; grid-template-columns:auto 1fr; gap:12px; align-items:flex-start;
+    padding:12px 16px; border-top:1px solid #edf0f5;
   }
   .row:first-child{border-top:none}
-  .name{font-weight:800; font-size:14px; line-height:1.2}
-  .meta{color:var(--muted); font-size:12px; line-height:1.2; margin-top:2px}
+  .name{font-weight:800; font-size:14px; line-height:1.2; color:#14304f}
+  .meta{color:#7b8aa1; font-size:12px; line-height:1.2; margin-top:2px}
 
-  /* — Круглый компакт-чекбокс — */
+  /* Чекбокс */
   .check{
     appearance:none; width:18px; height:18px; border-radius:50%;
     border:2px solid #cfd6e3; margin-top:2px; cursor:pointer; position:relative; transition:all .18s ease;
   }
   .check:checked{border-color:var(--accent); background:var(--accent); box-shadow:0 0 0 4px rgba(161,29,51,.14)}
-  .check:checked::after{content:""; position:absolute; inset:4px; border-radius:50%; background:#fff}
+  .check:checked::after{content:"";position:absolute;inset:4px;border-radius:50%;background:#fff}
 
-  /* — Сводка / Кнопки — */
-  .summary{border:1px solid var(--line); border-radius:14px; padding:12px 14px; background:#fff}
-  .summary b{font-weight:800}
-  .actions{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px}
-  .btn{position:relative; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; padding:14px; border-radius:14px; font-weight:800; font-size:16px; cursor:pointer; border:1px solid transparent; transition:transform .06s ease, box-shadow .18s ease}
-  .btn.secondary{background:#fff; color:var(--text); border-color:var(--line)}
-  .btn.primary{background:var(--accent); color:#fff; box-shadow:0 12px 26px rgba(161,29,51,.22)}
+  /* Сводка / Кнопки */
+  .summary{border:1px solid var(--line); border-radius:16px; padding:12px 14px; background:#fff}
+  .summary div{font-size:13px; color:#50627b}
+  .summary b{font-weight:800; color:#14304f}
+
+  .actions{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px}
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; width:100%;
+    padding:14px; border-radius:16px; font-weight:800; font-size:16px; cursor:pointer;
+    border:1px solid transparent; transition:transform .06s ease, box-shadow .18s ease;
+  }
   .btn:active{transform:translateY(1px) scale(.995)}
-  .ripple{position:absolute;border-radius:999px;transform:translate(-50%,-50%) scale(0);background:rgba(255,255,255,.55);animation:ripple .6s ease-out forwards;pointer-events:none}
-  @keyframes ripple{to{transform:translate(-50%,-50%) scale(20);opacity:0}}
+  .btn.secondary{background:#fff; color:#152235; border-color:#e6e9f0; box-shadow:0 10px 22px rgba(21,34,53,.08)}
+  .btn.primary{background:linear-gradient(180deg, var(--accent) 0%, var(--accent-dark) 100%); color:#fff; box-shadow:0 16px 32px rgba(161,29,51,.28)}
 
-  /* — Тост — */
-  .toast{position:fixed; left:14px; right:14px; bottom:14px; z-index:50; background:linear-gradient(135deg, var(--accent), #7d0f22); color:#fff; border-radius:14px; padding:14px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .22s ease, transform .22s ease; box-shadow:0 12px 28px rgba(161,29,51,.28)}
+  .toast{position:fixed; left:14px; right:14px; bottom:14px; z-index:50; background:linear-gradient(135deg, var(--accent), var(--accent-dark)); color:#fff; border-radius:14px; padding:14px; text-align:center; opacity:0; transform:translateY(10px); transition:opacity .22s ease, transform .22s ease; box-shadow:0 12px 28px rgba(161,29,51,.28)}
   .toast.show{opacity:1; transform:translateY(0)}
   .toast.error{background:linear-gradient(135deg, var(--danger), #a60e0e)}
 </style>
@@ -100,23 +94,25 @@
 <body>
   <div class="wrap">
     <div class="card">
-      <!-- только нужный логотип -->
-      <img class="crest" src="https://www.avm.gen.tr/resimler/sait_efendi_d.jpg" alt="sait efendi">
-      <h1>Участия в роликах — отчёты</h1>
-      <div class="sub"><span class="chip">съёмки</span><span>фиксируем за пару кликов</span></div>
+      <img class="crest" src="https://www.avm.gen.tr/resimler/sait_efendi_d.jpg" alt="">
+      <div class="brand"></div>
+      <h1></h1>
 
       <label for="category">Категория участия</label>
-      <select id="category" class="field" aria-label="Категория участия"></select>
+      <select id="category" class="field"></select>
       <div id="rateInfo" style="display:none"></div>
 
       <label for="shootDate">Дата съёмки</label>
-      <input type="date" id="shootDate" class="field" inputmode="numeric" aria-label="Дата съёмки">
+      <input type="date" id="shootDate" class="field" inputmode="numeric">
 
       <label>Сотрудники</label>
+      <!-- поиск как отдельная карточка -->
+      <div class="searchCard">
+        <input type="text" id="empSearch" class="search" placeholder="Поиск по ФИО, должности или филиалу…">
+      </div>
+
+      <!-- список отдельно -->
       <div class="box">
-        <div class="box-head">
-          <input type="text" id="empSearch" class="search" placeholder="Поиск по ФИО, должности или филиалу…" aria-label="Поиск сотрудников">
-        </div>
         <div id="empList" class="list">
           <div class="row"><div class="check" style="opacity:.35"></div><div class="meta">Загрузка…</div></div>
         </div>
@@ -127,10 +123,10 @@
 
       <label>Сводка</label>
       <div class="summary">
-        <div class="muted">Категория: <b id="sumCategory">—</b></div>
-        <div class="muted">Ставка: <b id="sumRate">—</b></div>
-        <div class="muted">Дата: <b id="sumDate">—</b></div>
-        <div class="muted">Сотрудников: <b id="sumCount">0</b></div>
+        <div>Категория: <b id="sumCategory">—</b></div>
+        <div>Ставка: <b id="sumRate">—</b></div>
+        <div>Дата: <b id="sumDate">—</b></div>
+        <div>Сотрудников: <b id="sumCount">0</b></div>
       </div>
 
       <div class="actions">
@@ -140,14 +136,14 @@
     </div>
   </div>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="toast" class="toast"></div>
 
 <script>
 /* === API === */
 const API_BASE  = 'https://script.google.com/macros/s/AKfycbyFYMA65ombc3Fy_UsY5OJGKgLJ99dRzKUuT_uHvDydkqH_ARcNDObEU_IYcr4WMo-Smg/exec';
 const API_TOKEN = '';
 
-/* === JSONP === */
+/* JSONP */
 function loadJSONP(url, cbName){
   return new Promise((resolve, reject)=>{
     const name = cbName || ('cb_' + Math.random().toString(36).slice(2));
@@ -166,7 +162,7 @@ async function apiSubmit(payload){
   return loadJSONP(`${API_BASE}?${q.toString()}`);
 }
 
-/* === UI === */
+/* UI */
 const el = id => document.getElementById(id);
 const categoryEl=el('category'), shootDateEl=el('shootDate'),
       empListEl=el('empList'), empSearchEl=el('empSearch'),
@@ -175,20 +171,10 @@ const categoryEl=el('category'), shootDateEl=el('shootDate'),
 
 function toast(msg, ok=true){
   toastEl.textContent = msg; toastEl.classList.toggle('error', !ok);
-  toastEl.classList.add('show'); setTimeout(()=>toastEl.classList.remove('show'), 2400);
+  toastEl.classList.add('show'); setTimeout(()=>toastEl.classList.remove('show'), 2200);
 }
 function formatRate(x){ return (x===null||x===''||isNaN(x)) ? '—' : String(x); }
 
-/* ripple */
-document.addEventListener('click', e=>{
-  const b=e.target.closest('.btn'); if(!b) return;
-  const r=document.createElement('span'); r.className='ripple';
-  const d=Math.max(b.clientWidth,b.clientHeight); r.style.width=r.style.height=d+'px';
-  const rect=b.getBoundingClientRect(); r.style.left=(e.clientX-rect.left)+'px'; r.style.top=(e.clientY-rect.top)+'px';
-  b.appendChild(r); setTimeout(()=>r.remove(),650);
-});
-
-/* === ДАННЫЕ === */
 let CATEGORIES=[], EMPLOYEES=[], FILTER='';
 
 function renderCategories(){
@@ -223,7 +209,7 @@ function updateSummary(){
   sumDateEl.textContent=shootDateEl.value || '—';
 }
 
-/* === Слушатели === */
+/* Слушатели */
 categoryEl.addEventListener('change', updateSummary);
 shootDateEl.addEventListener('change', updateSummary);
 empSearchEl.addEventListener('input', ()=>{ FILTER=empSearchEl.value; renderEmployees(); });
@@ -244,7 +230,7 @@ document.getElementById('btnSubmit').addEventListener('click', async ()=>{
   }catch(err){ toast(err.message||'Ошибка отправки', false); }
 });
 
-/* === Старт === */
+/* Старт */
 (async function init(){
   try{
     const res=await apiFetch();
