@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Участия в роликах — отчёты</title>
+<style>
+  :root{
+    --bg:#f6f6f8;
+    --panel:#ffffff;
+    --text:#111827;
+    --muted:#6b7280;
+    --line:#e5e7eb;
+    --accent:#A11D33;  /* основной */
+    --gold:#D3AE58;    /* вторичный */
+    --danger:#dc2626;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;
+  }
+  .wrap{max-width:480px; margin:0 auto; padding:12px; animation:fadeIn .35s ease;}
+  .card{
+    background:var(--panel); border:1px solid var(--line);
+    border-radius:16px; padding:14px 12px; box-shadow:0 8px 24px rgba(0,0,0,.06);
+    animation:slideUp .35s ease;
+  }
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes slideUp{from{transform:translateY(8px);opacity:.0}to{transform:translateY(0);opacity:1}}
+  @keyframes pulseOnce{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+
+  /* шапка с большой иконкой по центру */
+  .topbar{display:flex; justify-content:center; margin-bottom:8px;}
+  .logo-big{
+    width:96px; height:96px; border-radius:50%;
+    border:3px solid var(--gold); object-fit:cover;
+    box-shadow:0 4px 12px rgba(0,0,0,.15);
+    animation:pulseOnce .6s ease;
+  }
+  h1{
+    margin:6px 0 4px; font-size:20px; font-weight:800; letter-spacing:.2px;
+    text-align:center;
+  }
+
+  label{display:block; font-size:13px; color:var(--muted); margin:12px 0 6px;}
+  select, input[type="date"], input[type="text"], textarea{
+    width:100%; padding:14px 12px; border-radius:12px; outline:none;
+    border:1px solid var(--line); background:#fff; color:var(--text); font-size:16px;
+    transition:border-color .15s ease, box-shadow .15s ease, transform .05s ease;
+  }
+  select:focus, input:focus, textarea:focus{
+    border-color:var(--gold);
+    box-shadow:0 0 0 4px rgba(211,174,88,.18);
+  }
+  textarea{min-height:90px; resize:vertical;}
+  .muted{color:var(--muted); font-size:13px;}
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; width:100%;
+    padding:14px; border-radius:12px; border:1px solid transparent; font-weight:800; font-size:16px; cursor:pointer;
+    transition:transform .05s ease, filter .15s ease, box-shadow .15s ease;
+  }
+  .btn:active{ transform:translateY(1px) scale(.995); }
+  .btn.primary{ background:var(--accent); color:#fff; box-shadow:0 6px 14px rgba(161,29,51,.18); }
+  .btn.secondary{ background:#fff; color:var(--text); border-color:var(--line); }
+  .btn[disabled]{opacity:.6; cursor:default;}
+
+  .row-actions{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+
+  .employee-box{ margin-top:8px; border:1px solid var(--line); border-radius:14px; overflow:hidden; background:#fff;}
+  .employee-toolbar{ display:flex; gap:8px; align-items:center; padding:8px; border-bottom:1px solid var(--line); position:sticky; top:0; background:#fff; z-index:2;}
+  .employee-toolbar .pill{ margin-left:auto; font-size:12px; color:var(--muted); border:1px solid var(--line); border-radius:999px; padding:4px 10px;}
+  .employee-list{ max-height:54vh; overflow:auto; padding:6px 8px; animation:fadeIn .25s ease; }
+  .emp-item{ display:flex; gap:10px; padding:10px; border-radius:10px; transition:background .15s ease; }
+  .emp-item:hover{ background:#f9fafb; }
+  .emp-name{ font-weight:600; }
+  .emp-meta{ color:var(--muted); font-size:12px; }
+
+  .summary{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px 12px; }
+  .footer-note{ margin:10px 2px 0; }
+
+  .toast{
+    position:fixed; left:12px; right:12px; bottom:12px; background:var(--accent); color:#fff;
+    border-radius:12px; padding:12px; text-align:center; opacity:0; transform:translateY(8px);
+    transition:opacity .2s, transform .2s; z-index:50; box-shadow:0 10px 24px rgba(161,29,51,.25);
+  }
+  .toast.show{ opacity:1; transform:translateY(0); }
+  .toast.error{ background:var(--danger); box-shadow:0 10px 24px rgba(220,38,38,.25); }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="topbar">
+        <img class="logo-big" src="https://www.avm.gen.tr/resimler/sait_efendi_d.jpg" alt="logo">
+      </div>
+      <h1>Участия в роликах — отчёты</h1>
+
+      <label for="category">Категория участия</label>
+      <select id="category"></select>
+      <div id="rateInfo" class="muted" style="margin-top:6px;"></div>
+
+      <label for="shootDate">Дата съёмки</label>
+      <input type="date" id="shootDate" inputmode="numeric">
+
+      <label>Сотрудники</label>
+      <div class="employee-box">
+        <div class="employee-toolbar">
+          <button class="btn secondary" id="btnSelectAll" style="width:auto; padding:10px 12px; font-size:14px;">Выбрать всё</button>
+          <button class="btn secondary" id="btnClearAll" style="width:auto; padding:10px 12px; font-size:14px;">Снять всё</button>
+          <span class="pill"><span id="selCount">0</span> выбрано</span>
+        </div>
+        <div style="padding:8px;">
+          <input type="text" id="empSearch" placeholder="Поиск по ФИО, должности или филиалу…">
+        </div>
+        <div id="empList" class="employee-list">
+          <div class="muted" style="padding:8px;">Загрузка…</div>
+        </div>
+      </div>
+
+      <label for="note">Примечание</label>
+      <textarea id="note" placeholder="Например: «Съёмка ролика о новом меню»"></textarea>
+
+      <label>Сводка</label>
+      <div class="summary">
+        <div class="muted">Категория: <b id="sumCategory">—</b></div>
+        <div class="muted">Ставка: <b id="sumRate">—</b></div>
+        <div class="muted">Дата: <b id="sumDate">—</b></div>
+        <div class="muted">Сотрудников: <b id="sumCount">0</b></div>
+      </div>
+
+      <p class="muted footer-note">В таблицу «Отчёты» добавится по строке на каждого выбранного сотрудника.</p>
+
+      <div class="row-actions" style="margin-top:10px;">
+        <button class="btn secondary" id="btnReset">Сброс</button>
+        <button class="btn primary" id="btnSubmit">Отправить отчёт</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+<script>
+/* ====== НАСТРОЙКА API ====== */
+const API_BASE  = 'https://script.google.com/macros/s/AKfycbyFYMA65ombc3Fy_UsY5OJGKgLJ99dRzKUuT_uHvDydkqH_ARcNDObEU_IYcr4WMo-Smg/exec';
+const API_TOKEN = ''; // если в Code.gs пусто — оставь пусто и здесь
+
+/* ====== JSONP LOADER ====== */
+function loadJSONP(url, cbName){
+  return new Promise((resolve, reject)=>{
+    const name = cbName || ('cb_' + Math.random().toString(36).slice(2));
+    const s = document.createElement('script');
+    const sep = url.includes('?') ? '&' : '?';
+    s.src = url + sep + 'callback=' + name;
+    window[name] = (data)=>{ resolve(data); cleanup(); };
+    s.onerror = ()=>{ reject(new Error('JSONP load error')); cleanup(); };
+    function cleanup(){ delete window[name]; s.remove(); }
+    document.head.appendChild(s);
+  });
+}
+async function apiFetch(){
+  const url = `${API_BASE}?action=fetch&token=${encodeURIComponent(API_TOKEN)}`;
+  return await loadJSONP(url);
+}
+async function apiSubmit(payload){
+  const q = new URLSearchParams({
+    action: 'submit',
+    token: API_TOKEN,
+    category: payload.category || '',
+    shootDate: payload.shootDate || '',
+    note: payload.note || '',
+    employees: (payload.employees || []).join(',')
+  });
+  return await loadJSONP(`${API_BASE}?${q.toString()}`);
+}
+
+/* ====== UI ====== */
+const el = id => document.getElementById(id);
+const categoryEl=el('category'), shootDateEl=el('shootDate'), rateInfoEl=el('rateInfo'),
+      empListEl=el('empList'), empSearchEl=el('empSearch'), selCountEl=el('selCount'),
+      noteEl=el('note'), sumCategoryEl=el('sumCategory'), sumRateEl=el('sumRate'),
+      sumDateEl=el('sumDate'), sumCountEl=el('sumCount'), toastEl=el('toast');
+
+function toast(msg, ok=true){
+  toastEl.textContent = msg;
+  toastEl.classList.remove('error');
+  if(!ok) toastEl.classList.add('error');
+  toastEl.classList.add('show');
+  setTimeout(()=>toastEl.classList.remove('show'), 2200);
+}
+function formatRate(x){ return (x===null || x==='' || isNaN(x)) ? '—' : String(x); }
+
+let CATEGORIES=[], EMPLOYEES=[], FILTER='';
+
+function renderCategories(){
+  categoryEl.innerHTML='';
+  if(CATEGORIES.length===0){ categoryEl.innerHTML='<option value="">Нет категорий</option>'; return; }
+  CATEGORIES.forEach(c=>{
+    const o=document.createElement('option');
+    o.value=c.name; o.textContent=c.rate!=null ? `${c.name} — ${c.rate}` : c.name;
+    categoryEl.appendChild(o);
+  });
+  updateRateInfo(); updateSummary();
+}
+function renderEmployees(){
+  const q=(FILTER||'').toLowerCase().trim();
+  const list=EMPLOYEES.filter(e=>!q||e.name.toLowerCase().includes(q)||(e.position||'').toLowerCase().includes(q)||(e.branch||'').toLowerCase().includes(q));
+  if(list.length===0){ empListEl.innerHTML='<div class="muted" style="padding:8px;">Ничего не найдено</div>'; updateSelectedCount(); return; }
+  const frag=document.createDocumentFragment();
+  list.forEach(e=>{
+    const row=document.createElement('label'); row.className='emp-item';
+    const cb=document.createElement('input'); cb.type='checkbox'; cb.value=e.id; cb.style.transform='translateY(3px)';
+    cb.addEventListener('change', updateSelectedCount);
+    const box=document.createElement('div');
+    const nm=document.createElement('div'); nm.className='emp-name'; nm.textContent=e.name;
+    const mt=document.createElement('div'); mt.className='emp-meta'; mt.textContent=[e.position,e.branch].filter(Boolean).join(' • ');
+    box.appendChild(nm); box.appendChild(mt);
+    row.appendChild(cb); row.appendChild(box);
+    frag.appendChild(row);
+  });
+  empListEl.innerHTML=''; empListEl.appendChild(frag); updateSelectedCount();
+}
+function updateRateInfo(){ const cat=CATEGORIES.find(c=>c.name===categoryEl.value); rateInfoEl.textContent=cat?`Ставка: ${formatRate(cat.rate)}`:''; }
+function getSelectedIds(){ return Array.from(empListEl.querySelectorAll('input[type="checkbox"]:checked')).map(x=>x.value); }
+function updateSelectedCount(){ const n=getSelectedIds().length; selCountEl.textContent=n; sumCountEl.textContent=n; }
+function updateSummary(){
+  sumCategoryEl.textContent=categoryEl.value||'—';
+  const cat=CATEGORIES.find(c=>c.name===categoryEl.value);
+  sumRateEl.textContent=formatRate(cat?cat.rate:null);
+  sumDateEl.textContent=shootDateEl.value||'—';
+  sumCountEl.textContent=getSelectedIds().length;
+}
+
+/* ====== СЛУШАТЕЛИ ====== */
+categoryEl.addEventListener('change', ()=>{ updateRateInfo(); updateSummary(); });
+shootDateEl.addEventListener('change', updateSummary);
+empSearchEl.addEventListener('input', ()=>{ FILTER=empSearchEl.value; renderEmployees(); });
+document.getElementById('btnSelectAll').addEventListener('click', ()=>{ empListEl.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=true); updateSelectedCount(); });
+document.getElementById('btnClearAll').addEventListener('click', ()=>{ empListEl.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=false); updateSelectedCount(); });
+document.getElementById('btnReset').addEventListener('click', ()=>{ empSearchEl.value=''; FILTER=''; renderEmployees(); empListEl.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=false); updateSelectedCount(); noteEl.value=''; toast('Сброшено'); });
+document.getElementById('btnSubmit').addEventListener('click', async ()=>{
+  const category=categoryEl.value, shootDate=shootDateEl.value, employees=getSelectedIds(), note=noteEl.value||'';
+  if(!category){ toast('Выбери категорию', false); return; }
+  if(employees.length===0){ toast('Выбери сотрудников', false); return; }
+  try{
+    const res=await apiSubmit({category, shootDate, employees, note});
+    if(!res.ok) throw new Error(res.error||'Ошибка');
+    empListEl.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=false);
+    updateSelectedCount();
+    toast('Отчёт отправлен'); // уведомление после успеха
+  }catch(err){
+    toast(err.message||'Ошибка отправки', false);
+  }
+});
+
+/* ====== СТАРТ ====== */
+(async function init(){
+  try{
+    const res=await apiFetch();
+    if(!res.ok) throw new Error(res.error||'Ошибка загрузки');
+    CATEGORIES=res.categories||[]; EMPLOYEES=res.employees||[];
+    shootDateEl.value=res.now||''; renderCategories(); renderEmployees(); updateSummary();
+  }catch(err){
+    empListEl.innerHTML='<div class="muted" style="padding:8px;">Ошибка загрузки данных</div>';
+    toast(err.message||'Ошибка загрузки', false);
+  }
+})();
+</script>
+</body>
+</html>
